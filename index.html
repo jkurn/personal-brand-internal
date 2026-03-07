@@ -63,6 +63,18 @@
             transform: translateX(-100%);
         }
 
+        /* Backdrop overlay for mobile sidebar */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 999;
+        }
+        .sidebar-overlay.active {
+            display: block;
+        }
+
         .sidebar-header {
             margin-bottom: 2rem;
             border-bottom: 2px solid rgba(255,255,255,0.2);
@@ -73,6 +85,10 @@
             font-size: 1.2rem;
             font-weight: 700;
             letter-spacing: 1px;
+            cursor: pointer;
+        }
+        .sidebar-logo:hover {
+            opacity: 0.85;
         }
 
         .sidebar-subtitle {
@@ -1046,11 +1062,12 @@
 </head>
 <body>
 
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 <div class="container">
     <!-- SIDEBAR NAVIGATION -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-logo">Operations Portal</div>
+            <div class="sidebar-logo" id="sidebarHome" title="Home">Operations Portal</div>
             <div class="sidebar-subtitle">Personal Brand Services</div>
         </div>
         <ul class="sidebar-nav">
@@ -2057,10 +2074,16 @@
     function setupNavigation() {
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', function(e) {
-                e.preventDefault();
                 const section = this.getAttribute('data-section');
+                if (!section) return; // allow external href links through
+                e.preventDefault();
                 switchSection(section);
             });
+        });
+
+        // Logo click → go home
+        document.getElementById('sidebarHome').addEventListener('click', function() {
+            switchSection('dashboard');
         });
     }
 
@@ -2069,10 +2092,10 @@
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
 
         document.getElementById(sectionId).classList.add('active');
-        document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+        const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
+        if (activeLink) activeLink.classList.add('active');
 
-        // Close mobile sidebar
-        document.getElementById('sidebar').classList.add('mobile-closed');
+        closeMobileSidebar();
     }
 
     // DARK MODE
@@ -2094,9 +2117,38 @@
     }
 
     // MOBILE TOGGLE
+    function closeMobileSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const btn = document.getElementById('mobileSidebarToggle');
+        sidebar.classList.add('mobile-closed');
+        overlay.classList.remove('active');
+        btn.textContent = '☰';
+    }
+
+    function openMobileSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const btn = document.getElementById('mobileSidebarToggle');
+        sidebar.classList.remove('mobile-closed');
+        overlay.classList.add('active');
+        btn.textContent = '✕';
+    }
+
     function setupMobileToggle() {
+        // Start closed on mobile
+        if (window.innerWidth <= 768) {
+            document.getElementById('sidebar').classList.add('mobile-closed');
+        }
+
         document.getElementById('mobileSidebarToggle').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('mobile-closed');
+            const isClosed = document.getElementById('sidebar').classList.contains('mobile-closed');
+            isClosed ? openMobileSidebar() : closeMobileSidebar();
+        });
+
+        // Tap overlay to close
+        document.getElementById('sidebarOverlay').addEventListener('click', function() {
+            closeMobileSidebar();
         });
     }
 </script>
