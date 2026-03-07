@@ -1,0 +1,2105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operations Portal — Personal Brand Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #008080;
+            --primary-dark: #006666;
+            --primary-light: #00a3a3;
+            --bg: #F6F5EF;
+            --text: #333;
+            --text-light: #666;
+            --border: #e0dfd5;
+            --card-bg: #ffffff;
+            --hover-bg: #f0f5f5;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        body.dark-mode {
+            --bg: #1a1a1a;
+            --text: #e0e0e0;
+            --text-light: #b0b0b0;
+            --border: #333;
+            --card-bg: #2a2a2a;
+            --hover-bg: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 280px;
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.mobile-closed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            padding-bottom: 1.5rem;
+        }
+
+        .sidebar-logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-nav a:hover {
+            background-color: rgba(255,255,255,0.15);
+            color: white;
+        }
+
+        .sidebar-nav a.active {
+            background-color: rgba(255,255,255,0.25);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            background-color: var(--bg);
+        }
+
+        .header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .toggle-dark {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text);
+            transition: color 0.2s;
+        }
+
+        .toggle-dark:hover {
+            color: var(--primary);
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text);
+        }
+
+        .content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* SECTIONS */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* DASHBOARD */
+        .welcome-header {
+            margin-bottom: 2rem;
+        }
+
+        .welcome-header h1 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,128,128,0.1);
+            border-color: var(--primary);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .quick-link-btn {
+            background-color: var(--primary-light);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .quick-link-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateX(4px);
+        }
+
+        /* PHASE PIPELINE */
+        .phase-pipeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .phase-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .phase-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(0,128,128,0.12);
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .phase-number {
+            background-color: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .phase-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .phase-duration {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .service-item {
+            background-color: var(--hover-bg);
+            border-left: 3px solid var(--primary-light);
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .service-price {
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        /* SERVICES */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            box-shadow: 0 12px 32px rgba(0,128,128,0.15);
+            border-color: var(--primary-light);
+        }
+
+        .service-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .service-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.85rem;
+            opacity: 0.95;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .service-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .service-card.expanded .service-content {
+            max-height: 2000px;
+        }
+
+        .service-details {
+            padding: 1.5rem;
+        }
+
+        .service-description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .workflow-table {
+            width: 100%;
+            margin-bottom: 1rem;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .workflow-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .workflow-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .workflow-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .workflow-table .phase {
+            font-weight: 600;
+            color: var(--primary);
+            width: 80px;
+        }
+
+        .workflow-table .client {
+            background-color: rgba(0,163,163,0.05);
+        }
+
+        .workflow-table .internal {
+            background-color: rgba(0,128,128,0.05);
+        }
+
+        .templates-list {
+            list-style: none;
+            font-size: 0.9rem;
+        }
+
+        .templates-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .templates-list li:last-child {
+            border-bottom: none;
+        }
+
+        .template-type {
+            background-color: var(--hover-bg);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-left: auto;
+        }
+
+        /* TEMPLATES GRID */
+        .templates-container {
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            background-color: var(--card-bg);
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .template-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0,128,128,0.1);
+        }
+
+        .template-name {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .template-meta {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .copy-btn {
+            background-color: var(--primary-light);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* BRAND EVALUATION TOOL */
+        .eval-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .eval-form {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .slider-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .slider-label {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+
+        .slider-value {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .slider-description {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,128,128,0.3);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,128,128,0.3);
+        }
+
+        .eval-results {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .eval-chart {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 1.5rem;
+        }
+
+        .eval-score {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .eval-score-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .eval-archetype {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .eval-description {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 1rem;
+            line-height: 1.6;
+        }
+
+        /* COMPETITOR TABLE */
+        .competitor-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .competitor-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .competitor-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .competitor-table tr:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .competitor-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .gap-section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .gap-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .gap-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .gap-item {
+            background-color: var(--hover-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary-light);
+        }
+
+        .gap-item-name {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        .gap-item-price {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* TECH STACK */
+        .tech-stack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tech-tier {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .tech-tier-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .tech-tier-cost {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .tech-list {
+            list-style: none;
+        }
+
+        .tech-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        .tech-list li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--primary-light);
+            font-weight: 700;
+        }
+
+        .workflow-section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .workflow-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .workflow-item {
+            padding: 1rem;
+            background-color: var(--hover-bg);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .workflow-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .workflow-item-title {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .workflow-item-steps {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* TIMELINE */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline:before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background-color: var(--primary-light);
+        }
+
+        .timeline-item {
+            margin-bottom: 2rem;
+            width: 45%;
+        }
+
+        .timeline-item:nth-child(odd) {
+            margin-left: 0;
+            margin-right: auto;
+            padding-right: 3rem;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) {
+            margin-left: auto;
+            margin-right: 0;
+            padding-left: 3rem;
+            text-align: left;
+        }
+
+        .timeline-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-content:before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary);
+            border: 3px solid var(--bg);
+            border-radius: 50%;
+            top: 1.5rem;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content:before {
+            right: -38.5px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content:before {
+            left: -38.5px;
+        }
+
+        .timeline-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-description {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 260px;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .header-title {
+                font-size: 1.3rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .eval-container {
+                grid-template-columns: 1fr;
+            }
+
+            .phase-pipeline {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline:before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 60px;
+                padding-right: 0;
+                text-align: left;
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .timeline-item:nth-child(odd) {
+                margin-right: 0;
+                padding-right: 0;
+                padding-left: 60px;
+                text-align: left;
+            }
+
+            .timeline-item:nth-child(even) {
+                margin-left: 0;
+                padding-left: 60px;
+            }
+
+            .timeline-content:before {
+                left: -42.5px !important;
+                right: auto !important;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .template-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-stack-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .competitor-table {
+                font-size: 0.85rem;
+            }
+
+            .competitor-table th,
+            .competitor-table td {
+                padding: 0.75rem;
+            }
+
+            .workflow-table {
+                font-size: 0.75rem;
+            }
+
+            .workflow-table th,
+            .workflow-table td {
+                padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                height: 100vh;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .header-title {
+                font-size: 1.2rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .welcome-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            .sidebar,
+            .header,
+            .mobile-toggle,
+            .toggle-dark,
+            .search-box,
+            .copy-btn,
+            .quick-links {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content {
+                max-width: 100%;
+            }
+
+            .section {
+                display: block;
+                page-break-after: always;
+            }
+
+            body {
+                background-color: white;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- SIDEBAR NAVIGATION -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">Operations Portal</div>
+            <div class="sidebar-subtitle">Personal Brand Services</div>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="#" data-section="dashboard" class="nav-link active">Dashboard</a></li>
+            <li><a href="#" data-section="journey" class="nav-link">Client Journey</a></li>
+            <li><a href="#" data-section="services" class="nav-link">Services</a></li>
+            <li><a href="#" data-section="templates" class="nav-link">Templates & Scripts</a></li>
+            <li><a href="#" data-section="evaluation" class="nav-link">Brand Evaluation Tool</a></li>
+            <li><a href="#" data-section="competitors" class="nav-link">Competitor Intelligence</a></li>
+            <li><a href="#" data-section="techstack" class="nav-link">Tech Stack & Tools</a></li>
+            <li><a href="#" data-section="roadmap" class="nav-link">PRD Milestones</a></li>
+            <li style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 1rem;"><a href="dashboard.html" class="nav-link" style="opacity: 0.8;">📊 Playbook Dashboard</a></li>
+        </ul>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- HEADER -->
+        <header class="header">
+            <h1 class="header-title">Operations Portal</h1>
+            <div class="header-controls">
+                <button class="toggle-dark" id="toggleDark" title="Toggle dark mode">🌙</button>
+                <button class="mobile-toggle" id="mobileSidebarToggle">☰</button>
+            </div>
+        </header>
+
+        <div class="content">
+            <!-- DASHBOARD SECTION -->
+            <section id="dashboard" class="section active">
+                <div class="welcome-header">
+                    <h1>Operations Portal — Personal Brand Services</h1>
+                    <p>Your team's single source of truth for executing world-class personal branding services.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Service Offerings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Pipeline Phases</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">48+</div>
+                        <div class="stat-label">Templates & Scripts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Brand Dimensions</div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 style="margin-bottom: 1rem; color: var(--primary); font-size: 1.3rem;">Quick Links</h2>
+                    <div class="quick-links">
+                        <button class="quick-link-btn" onclick="switchSection('services')">View Services</button>
+                        <button class="quick-link-btn" onclick="switchSection('templates')">Browse Templates</button>
+                        <button class="quick-link-btn" onclick="switchSection('evaluation')">Brand Eval Tool</button>
+                        <button class="quick-link-btn" onclick="switchSection('competitors')">Competitor Intel</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CLIENT JOURNEY SECTION -->
+            <section id="journey" class="section">
+                <h1 style="color: var(--primary); margin-bottom: 1.5rem;">Client Journey: 4-Phase Pipeline</h1>
+
+                <div class="phase-pipeline">
+                    <!-- Phase 1 -->
+                    <div class="phase-card">
+                        <div class="phase-header">
+                            <div class="phase-number">1</div>
+                            <div>
+                                <div class="phase-title">Assessment & Discovery</div>
+                                <div class="phase-duration">Weeks 1-3</div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <strong>Personal Brand Discovery Call</strong>
+                            <div class="service-price">$150 • 2 hrs</div>
+                        </div>
+                        <div class="service-item">
+                            <strong>Competitor Brand Audit</strong>
+                            <div class="service-price">$500 • 5 hrs</div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="phase-card">
+                        <div class="phase-header">
+                            <div class="phase-number">2</div>
+                            <div>
+                                <div class="phase-title">Strategy & Identity</div>
+                                <div class="phase-duration">Weeks 4-7</div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <strong>LinkedIn Profile Optimization</strong>
+                            <div class="service-price">$500 • 5 hrs</div>
+                        </div>
+                        <div class="service-item">
+                            <strong>Executive Bio Creation</strong>
+                            <div class="service-price">$500 • Variable hrs</div>
+                        </div>
+                        <div class="service-item">
+                            <strong>Content Strategy Plan</strong>
+                            <div class="service-price">$1,000 • 10 hrs</div>
+                        </div>
+                        <div class="service-item">
+                            <strong>Brand Strategy Workshop + Photography</strong>
+                            <div class="service-price">$500 • 3 hrs</div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="phase-card">
+                        <div class="phase-header">
+                            <div class="phase-number">3</div>
+                            <div>
+                                <div class="phase-title">Foundation Building</div>
+                                <div class="phase-duration">Weeks 8-12</div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <strong>Monthly Content Plan</strong>
+                            <div class="service-price">$550 • 5 hrs</div>
+                        </div>
+                        <div class="service-item">
+                            <strong>Social Media Management Plan</strong>
+                            <div class="service-price">$1,100 • 10 hrs</div>
+                        </div>
+                        <div class="service-item">
+                            <strong>Thought Leadership Articles</strong>
+                            <div class="service-price">$2,000/article • Variable hrs</div>
+                        </div>
+                        <div class="service-item">
+                            <strong>LinkedIn Engagement Strategy</strong>
+                            <div class="service-price">$1,000 • 10 hrs</div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 4 -->
+                    <div class="phase-card">
+                        <div class="phase-header">
+                            <div class="phase-number">4</div>
+                            <div>
+                                <div class="phase-title">Ongoing Content & Growth</div>
+                                <div class="phase-duration">Months 4-12+</div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <strong>Video Scripts</strong>
+                            <div class="service-price">$600 • 5 hrs</div>
+                        </div>
+                        <div class="service-item">
+                            <strong>Comprehensive Personal Brand Audit</strong>
+                            <div class="service-price">$1,200 • 10 hrs</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SERVICES SECTION -->
+            <section id="services" class="section">
+                <h1 style="color: var(--primary); margin-bottom: 1.5rem;">All 12 Services - Complete Workflows</h1>
+
+                <div class="services-grid" id="servicesContainer">
+                    <!-- Services will be generated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- TEMPLATES SECTION -->
+            <section id="templates" class="section">
+                <h1 style="color: var(--primary); margin-bottom: 1rem;">Templates & Scripts Library</h1>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">48+ templates, questionnaires, and email scripts for all 12 services.</p>
+
+                <input type="text" class="search-box" id="templateSearch" placeholder="Search templates...">
+
+                <div class="template-grid" id="templatesContainer">
+                    <!-- Templates will be generated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- EVALUATION TOOL SECTION -->
+            <section id="evaluation" class="section">
+                <h1 style="color: var(--primary); margin-bottom: 1.5rem;">Brand Evaluation Tool</h1>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">Assess brand strength across 6 dimensions. Identifies your archetype and growth opportunities.</p>
+
+                <div class="eval-container">
+                    <div class="eval-form">
+                        <h3 style="color: var(--primary); margin-bottom: 1.5rem;">6 Brand Dimensions</h3>
+
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Visibility</span>
+                                <span class="slider-value" id="visibilityValue">5</span>
+                            </div>
+                            <div class="slider-description">Reach & awareness, digital footprint, search volume</div>
+                            <input type="range" id="visibility" min="1" max="10" value="5" class="eval-slider">
+                        </div>
+
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Authority</span>
+                                <span class="slider-value" id="authorityValue">5</span>
+                            </div>
+                            <div class="slider-description">Credibility & trust, social proof, credentials</div>
+                            <input type="range" id="authority" min="1" max="10" value="5" class="eval-slider">
+                        </div>
+
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Differentiation</span>
+                                <span class="slider-value" id="differentiationValue">5</span>
+                            </div>
+                            <div class="slider-description">Unique positioning, proprietary framework, contrarian take</div>
+                            <input type="range" id="differentiation" min="1" max="10" value="5" class="eval-slider">
+                        </div>
+
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Consistency</span>
+                                <span class="slider-value" id="consistencyValue">5</span>
+                            </div>
+                            <div class="slider-description">Frequency of output, message stability, visual cohesion</div>
+                            <input type="range" id="consistency" min="1" max="10" value="5" class="eval-slider">
+                        </div>
+
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Engagement</span>
+                                <span class="slider-value" id="engagementValue">5</span>
+                            </div>
+                            <div class="slider-description">Comments, shares, debates, audience willingness to act</div>
+                            <input type="range" id="engagement" min="1" max="10" value="5" class="eval-slider">
+                        </div>
+
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Authenticity</span>
+                                <span class="slider-value" id="authenticityValue">5</span>
+                            </div>
+                            <div class="slider-description">Relatability, willingness to share struggles, human pulse</div>
+                            <input type="range" id="authenticity" min="1" max="10" value="5" class="eval-slider">
+                        </div>
+                    </div>
+
+                    <div class="eval-results">
+                        <canvas id="radarChart" class="eval-chart"></canvas>
+                        <div class="eval-score" id="totalScore">30</div>
+                        <div class="eval-score-label">out of 60 points</div>
+                        <div class="eval-archetype" id="archetypeLabel">The Rising Star</div>
+                        <div class="eval-description" id="archetypeDescription">
+                            Balanced scores across dimensions with room for growth. Focus on developing visibility and deepening engagement.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- COMPETITOR INTELLIGENCE SECTION -->
+            <section id="competitors" class="section">
+                <h1 style="color: var(--primary); margin-bottom: 1.5rem;">Competitor Intelligence</h1>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">Analysis of 8 competing personal branding service providers and gap opportunities.</p>
+
+                <table class="competitor-table">
+                    <thead>
+                        <tr>
+                            <th>Competitor</th>
+                            <th>Framework</th>
+                            <th>Key Services</th>
+                            <th>Price Range</th>
+                            <th>Differentiator</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>William Arruda</strong></td>
+                            <td>KNOW/SHOW/GROW</td>
+                            <td>Workshops, keynotes, books</td>
+                            <td>Premium</td>
+                            <td>Pioneer, guru positioning</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dorie Clark</strong></td>
+                            <td>Recognized Expert</td>
+                            <td>Courses, coaching, books</td>
+                            <td>$2K-$8K</td>
+                            <td>HBR authority</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Laura Pearman</strong></td>
+                            <td>Visual-first</td>
+                            <td>Photography, website</td>
+                            <td>$3K-$5K</td>
+                            <td>Photography-led branding</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Melisa Liberman</strong></td>
+                            <td>Niche: Consultants</td>
+                            <td>Coaching, courses</td>
+                            <td>$5K-$15K</td>
+                            <td>Deep niche focus</td>
+                        </tr>
+                        <tr>
+                            <td><strong>YouRefactor</strong></td>
+                            <td>Digital-first</td>
+                            <td>LinkedIn, content</td>
+                            <td>Mid-range</td>
+                            <td>Data-driven approach</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Brand of a Leader</strong></td>
+                            <td>Executive Focus</td>
+                            <td>Full-service branding</td>
+                            <td>Premium</td>
+                            <td>C-suite positioning</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ohh My Brand</strong></td>
+                            <td>Creative</td>
+                            <td>Visual identity, social</td>
+                            <td>$2K-$6K</td>
+                            <td>Design-forward</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PixelCrayons</strong></td>
+                            <td>Tech/Agency</td>
+                            <td>Full digital</td>
+                            <td>Budget-mid</td>
+                            <td>Scale operation</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="gap-section">
+                    <h3>Service Gap Opportunities</h3>
+                    <p style="margin-bottom: 1rem; color: var(--text-light);">Services competitors offer that could expand our offerings:</p>
+                    <div class="gap-items">
+                        <div class="gap-item">
+                            <div class="gap-item-name">PR & Media Distribution</div>
+                            <div class="gap-item-price">$2K-$4K/month</div>
+                        </div>
+                        <div class="gap-item">
+                            <div class="gap-item-name">Speaking & Keynote Assets</div>
+                            <div class="gap-item-price">$4K-$5K package</div>
+                        </div>
+                        <div class="gap-item">
+                            <div class="gap-item-name">Visual Identity System</div>
+                            <div class="gap-item-price">$3.5K-$5.7K</div>
+                        </div>
+                        <div class="gap-item">
+                            <div class="gap-item-name">Digital Products / Courses</div>
+                            <div class="gap-item-price">$90-$147 self-paced</div>
+                        </div>
+                        <div class="gap-item">
+                            <div class="gap-item-name">Assessment Tools</div>
+                            <div class="gap-item-price">Diagnostic instruments</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TECH STACK SECTION -->
+            <section id="techstack" class="section">
+                <h1 style="color: var(--primary); margin-bottom: 1.5rem;">Tech Stack & Tools</h1>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">Three operational tiers: Solo, Team, Scale.</p>
+
+                <div class="tech-stack-grid">
+                    <!-- Tier 1 -->
+                    <div class="tech-tier">
+                        <div class="tech-tier-title">Tier 1: Solo Operator</div>
+                        <div class="tech-tier-cost">$0-$100/month</div>
+                        <ul class="tech-list">
+                            <li>Canva Pro</li>
+                            <li>Notion</li>
+                            <li>Buffer/Later</li>
+                            <li>Google Analytics</li>
+                            <li>Calendly</li>
+                            <li>Loom</li>
+                            <li>Grammarly Premium</li>
+                        </ul>
+                    </div>
+
+                    <!-- Tier 2 -->
+                    <div class="tech-tier">
+                        <div class="tech-tier-title">Tier 2: Small Team</div>
+                        <div class="tech-tier-cost">$100-$500/month</div>
+                        <ul class="tech-list">
+                            <li>All Tier 1 tools</li>
+                            <li>HubSpot CRM</li>
+                            <li>Jasper / Claude</li>
+                            <li>Descript</li>
+                            <li>Ahrefs / SEMrush</li>
+                            <li>Zapier</li>
+                            <li>Riverside.fm</li>
+                        </ul>
+                    </div>
+
+                    <!-- Tier 3 -->
+                    <div class="tech-tier">
+                        <div class="tech-tier-title">Tier 3: Scale Operation</div>
+                        <div class="tech-tier-cost">$500+/month</div>
+                        <ul class="tech-list">
+                            <li>All Tier 2 tools</li>
+                            <li>Salesforce</li>
+                            <li>Custom AI pipelines</li>
+                            <li>Apify + Claude</li>
+                            <li>Brandwatch</li>
+                            <li>Sprout Social</li>
+                            <li>Advanced analytics</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="workflow-section">
+                    <h3>Core Workflow Automations</h3>
+
+                    <div class="workflow-item">
+                        <div class="workflow-item-title">📋 Content Pipeline</div>
+                        <div class="workflow-item-steps">Research → Draft → Edit → Publish → Distribute → Analyze</div>
+                    </div>
+
+                    <div class="workflow-item">
+                        <div class="workflow-item-title">👥 Client Onboarding</div>
+                        <div class="workflow-item-steps">Inquiry → Discovery Call → Proposal → Contract → Kickoff</div>
+                    </div>
+
+                    <div class="workflow-item">
+                        <div class="workflow-item-title">🔍 Brand Audit</div>
+                        <div class="workflow-item-steps">Data Collection → Analysis → SWOT → Report → Presentation</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROADMAP SECTION -->
+            <section id="roadmap" class="section">
+                <h1 style="color: var(--primary); margin-bottom: 1.5rem;">PRD Milestones</h1>
+                <p style="color: var(--text-light); margin-bottom: 2rem;">5-phase product roadmap for scaling the personal branding services operation.</p>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">M1: Assessment Portal</div>
+                            <div class="timeline-description">Build client intake forms, scoring engine, and automated report generation for initial client assessments.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">M2: AI Content Engine</div>
+                            <div class="timeline-description">Apify scraper for competitor analysis, Claude-powered content drafts, and AI prompt library for consistency.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">M3: Automated Deliverables</div>
+                            <div class="timeline-description">Template auto-population, branded PDF generation, and email sequence automation for client delivery.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">M4: Internal Operating System</div>
+                            <div class="timeline-description">Notion Teamspaces for project management, client dashboards, and knowledge base for team alignment.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">M5: Advanced Scaling</div>
+                            <div class="timeline-description">Multi-agent workflows, autonomous content pipelines, and predictive brand analytics for strategic advantage.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script>
+    // DATA: All 12 Services
+    const services = [
+        {
+            name: "Personal Brand Discovery Call",
+            price: "$150",
+            hours: "2 hrs",
+            description: "Foundation-setting conversation to identify core brand strengths, values, and differentiators.",
+            workflows: {
+                before: {
+                    client: "Complete intake form, prepare to discuss goals/history/achievements",
+                    internal: "Prepare intake form, review client's digital presence and brand indicators, schedule meeting"
+                },
+                during: {
+                    client: "Engage in conversation, provide candid feedback about goals and experiences, take notes",
+                    internal: "Facilitate guided conversation to identify strengths/values/differentiators, ask targeted questions, take notes on themes"
+                },
+                after: {
+                    client: "Review summary document, implement initial action steps, provide feedback/schedule follow-up",
+                    internal: "Compile summary document with core brand elements and recommended actions, send follow-up email within 24-48hrs, offer next steps/upsell"
+                }
+            },
+            templates: ["Discovery Intake Form", "Welcome Email", "Brand Summary Template", "Follow-up Email"]
+        },
+        {
+            name: "Competitor Brand Audit",
+            price: "$500",
+            hours: "5 hrs",
+            description: "Comprehensive analysis of 3-5 competitors to identify gaps, opportunities, and differentiation.",
+            workflows: {
+                before: {
+                    client: "Provide list of competitors, share specific branding concerns",
+                    internal: "Gather info on client's industry/competitors, create analysis framework for websites/social/positioning"
+                },
+                during: {
+                    client: "Review and discuss findings with consultant",
+                    internal: "Audit up to 5 competitors on strengths/weaknesses/branding gaps, compile notes on visuals/messaging/online presence"
+                },
+                after: {
+                    client: "Implement recommended changes, track progress",
+                    internal: "Deliver report with insights/recommendations/differentiation opportunities, schedule follow-up call"
+                }
+            },
+            templates: ["Competitor Analysis Framework", "Audit Questionnaire", "Competitor Comparison Template", "Audit Report Template"]
+        },
+        {
+            name: "LinkedIn Profile Optimization",
+            price: "$500",
+            hours: "5 hrs",
+            description: "Complete LinkedIn profile refresh including headline, summary, experience, skills, and multimedia.",
+            workflows: {
+                before: {
+                    client: "Provide access to current LinkedIn profile and relevant docs, share professional goals",
+                    internal: "Review client's current profile and gather background materials, identify goals and accomplishments to highlight"
+                },
+                during: {
+                    client: "Collaborate on messaging and ensure key areas reflected",
+                    internal: "Optimize headline/summary/experience/skills sections, add/edit multimedia/endorsements/recommendations"
+                },
+                after: {
+                    client: "Review final profile, make last adjustments, engage with profile regularly",
+                    internal: "Provide final review and feedback session, offer guidance on maintaining profile and creating content"
+                }
+            },
+            templates: ["LinkedIn Audit Checklist", "Onboarding Email", "LinkedIn Headline Templates", "Delivery Email"]
+        },
+        {
+            name: "Executive Bio Creation",
+            price: "$500",
+            hours: "Variable",
+            description: "Professionally crafted bio highlighting leadership, expertise, and unique value proposition.",
+            workflows: {
+                before: {
+                    client: "Provide background materials and share key career achievements, complete brief interview",
+                    internal: "Gather client's resume/LinkedIn/relevant info, conduct brief interview for leadership story and highlights"
+                },
+                during: {
+                    client: "Review and provide feedback on draft bio",
+                    internal: "Write draft bio emphasizing leadership style/achievements/expertise, review with client for accuracy and tone"
+                },
+                after: {
+                    client: "Implement bio across platforms, consider using in branding materials",
+                    internal: "Make final revisions, deliver in multiple formats (short and long), provide recommendations for use"
+                }
+            },
+            templates: ["Bio Discovery Interview", "Bio Draft Template (Long)", "Bio Draft Template (Short)", "Bio Distribution Guide"]
+        },
+        {
+            name: "Content Strategy Plan (Annual)",
+            price: "$1,000",
+            hours: "10 hrs",
+            description: "12-month content strategy with themed calendar, platform guidelines, and success metrics.",
+            workflows: {
+                before: {
+                    client: "Provide access to current content assets and share business goals, complete discovery session",
+                    internal: "Conduct discovery on goals/audience/content needs, review existing content and perform audit, research trends"
+                },
+                during: {
+                    client: "Review and approve content strategy plan, provide feedback",
+                    internal: "Develop 12-month content calendar with themes/platforms/content types, outline KPIs and success measurement"
+                },
+                after: {
+                    client: "Implement content plan, track progress, schedule quarterly check-ins",
+                    internal: "Deliver strategy document with recommendations, offer ongoing consultation/quarterly check-ins"
+                }
+            },
+            templates: ["Content Discovery Questionnaire", "Strategy Briefing Email", "Annual Content Calendar", "Strategy Delivery Report"]
+        },
+        {
+            name: "Brand Strategy Workshop + Photography",
+            price: "$500",
+            hours: "3 hrs",
+            description: "2-hour brand strategy workshop plus 1-hour professional photography session with 4 retouched images.",
+            workflows: {
+                before: {
+                    client: "Share current branding materials and goals, prepare questions for strategy session",
+                    internal: "Develop customized workshop agenda, coordinate with photographer, gather client materials"
+                },
+                during: {
+                    client: "Participate in workshop and photoshoot, provide feedback on strategy and photo preferences",
+                    internal: "Conduct 2-hour brand strategy workshop (messaging/values/visual identity), host 1-hour photo session"
+                },
+                after: {
+                    client: "Review strategy document and photos, implement updated strategy and visuals",
+                    internal: "Deliver final strategy document and photos within set timeframe, provide recommendations for integrating visuals"
+                }
+            },
+            templates: ["Workshop Agenda", "Pre-workshop Questionnaire", "Photography Session Brief", "Workshop Delivery Package"]
+        },
+        {
+            name: "Monthly Content Plan",
+            price: "$550",
+            hours: "5 hrs",
+            description: "Detailed monthly content calendar with topics, formats, and posting schedules across platforms.",
+            workflows: {
+                before: {
+                    client: "Share business goals and key events for upcoming month, provide feedback on past content",
+                    internal: "Conduct discovery on content needs and goals, review existing content and identify themes"
+                },
+                during: {
+                    client: "Collaborate on content plan, provide insights on tone/style/platform preferences",
+                    internal: "Create detailed content calendar for the month (topics/formats/schedules for various platforms), provide ideas for blog/social/video"
+                },
+                after: {
+                    client: "Implement content plan, track performance, communicate adjustments, prepare for next month",
+                    internal: "Deliver final content plan with feedback on implementation, follow up at end of month to assess performance"
+                }
+            },
+            templates: ["Monthly Planning Questionnaire", "Content Planning Email", "Monthly Content Calendar", "Performance Analysis Template"]
+        },
+        {
+            name: "Social Media Management Plan",
+            price: "$1,100",
+            hours: "10 hrs",
+            description: "Comprehensive social media strategy with content calendar, posting schedule, and engagement tactics.",
+            workflows: {
+                before: {
+                    client: "Share existing social media content and metrics, provide insights on audience and engagement history",
+                    internal: "Conduct discovery on brand/audience/current social performance, analyze existing accounts"
+                },
+                during: {
+                    client: "Collaborate on content ideas/tone/messaging for posts",
+                    internal: "Develop comprehensive social media strategy (themes/posting schedules/engagement tactics), create content calendar"
+                },
+                after: {
+                    client: "Implement social media plan and content calendar, track metrics, communicate about performance",
+                    internal: "Deliver management plan and content calendar, offer ongoing support or monthly reviews"
+                }
+            },
+            templates: ["Social Audit Questionnaire", "Strategy Briefing Email", "Social Content Calendar", "Monthly Review Report"]
+        },
+        {
+            name: "Thought Leadership Articles",
+            price: "$2,000",
+            hours: "Variable",
+            description: "1500-2000 word articles establishing expertise with original insights and supporting data.",
+            workflows: {
+                before: {
+                    client: "Share key insights/experiences/specific message, provide examples of previous content",
+                    internal: "Conduct discovery on expertise/audience/goals, research relevant topics and data"
+                },
+                during: {
+                    client: "Review draft and collaborate on revisions",
+                    internal: "Write 1500-2000 word article weaving client's insights/trends/takeaways, collaborate on tone and messaging"
+                },
+                after: {
+                    client: "Publish or work with business on distribution, track engagement, plan future content",
+                    internal: "Provide final draft with SEO optimization and publication suggestions, offer revisions and distribution support"
+                }
+            },
+            templates: ["Article Brief Template", "Article Planning Email", "Article Draft Template", "Publishing & Distribution Guide"]
+        },
+        {
+            name: "LinkedIn Engagement Strategy",
+            price: "$1,000",
+            hours: "10 hrs",
+            description: "Strategic framework for daily/weekly engagement including post strategy and connection tactics.",
+            workflows: {
+                before: {
+                    client: "Share current LinkedIn goals/focus/metrics, be ready to communicate topics to highlight",
+                    internal: "Conduct discovery on target audience/positioning/engagement goals, review current activity"
+                },
+                during: {
+                    client: "Collaborate on engagement strategy, provide input on tone/topics/connections",
+                    internal: "Develop detailed strategy (daily/weekly/monthly actions, post topics, comments, connection tactics, best practices)"
+                },
+                after: {
+                    client: "Track engagement metrics, adjust content, participate in quarterly reviews",
+                    internal: "Deliver engagement strategy with training session (content creation tips, engagement tools), offer quarterly reviews"
+                }
+            },
+            templates: ["Engagement Audit Questionnaire", "Strategy Briefing Email", "Engagement Strategy Guide", "Monthly Metrics Template"]
+        },
+        {
+            name: "Video Script for Thought Leadership",
+            price: "$600",
+            hours: "5 hrs",
+            description: "Engaging video script (3-5 min) optimized for delivery with pacing and visual cues.",
+            workflows: {
+                before: {
+                    client: "Share key insights/topics/intended audience, provide specific examples or messages",
+                    internal: "Conduct discovery on message/audience/desired format (interview/presentation/animated), research relevant topics"
+                },
+                during: {
+                    client: "Review draft script, provide feedback on tone and content",
+                    internal: "Write engaging script (intro/key points/data/CTA), review with client for voice alignment"
+                },
+                after: {
+                    client: "Implement script for filming with suggested tips, share on relevant platforms",
+                    internal: "Deliver final script with filming tips (pacing/delivery/visuals), offer feedback on filmed content"
+                }
+            },
+            templates: ["Video Brief Questionnaire", "Script Planning Email", "Video Script Template", "Filming Tips & Delivery Guide"]
+        },
+        {
+            name: "Comprehensive Personal Brand Audit",
+            price: "$1,200",
+            hours: "10 hrs",
+            description: "Deep-dive audit of all brand touchpoints with SWOT analysis and prioritized action plan.",
+            workflows: {
+                before: {
+                    client: "Share existing branding materials and feedback, communicate areas to improve",
+                    internal: "Conduct discovery on goals/audience/brand perceptions, collect and review online presence"
+                },
+                during: {
+                    client: "Engage in discussions about findings, provide additional context",
+                    internal: "Analyze data for SWOT analysis, create detailed report with actionable recommendations"
+                },
+                after: {
+                    client: "Review audit report, implement recommendations, schedule follow-up",
+                    internal: "Deliver audit report with prioritized action items and strategies, offer follow-up consultation"
+                }
+            },
+            templates: ["Audit Questionnaire", "Audit Briefing Email", "Comprehensive Audit Report Template", "Action Plan Template"]
+        }
+    ];
+
+    // Templates data
+    const allTemplates = [];
+    services.forEach((service, idx) => {
+        service.templates.forEach(template => {
+            const types = ["Questionnaire", "Email", "Template", "Checklist", "Report"];
+            const type = types[Math.floor(Math.random() * types.length)];
+            allTemplates.push({
+                name: template,
+                service: service.name,
+                type: type,
+                phase: Math.ceil((idx + 1) / 3)
+            });
+        });
+    });
+
+    // INITIALIZATION
+    document.addEventListener('DOMContentLoaded', function() {
+        renderServices();
+        renderTemplates();
+        initEvaluationTool();
+        setupNavigation();
+        setupDarkMode();
+        setupMobileToggle();
+    });
+
+    // RENDER SERVICES
+    function renderServices() {
+        const container = document.getElementById('servicesContainer');
+        container.innerHTML = services.map((service, idx) => `
+            <div class="service-card" data-service="${idx}">
+                <div class="service-header" onclick="toggleService(${idx})">
+                    <div>
+                        <div class="service-title">${service.name}</div>
+                        <div class="service-meta">
+                            <div>${service.price} • ${service.hours}</div>
+                        </div>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="service-content">
+                    <div class="service-details">
+                        <p class="service-description">${service.description}</p>
+
+                        <h4 style="font-weight: 600; color: var(--primary); margin-bottom: 0.75rem;">Before / During / After Workflow</h4>
+                        <table class="workflow-table">
+                            <thead>
+                                <tr>
+                                    <th>Stakeholder</th>
+                                    <th>Before</th>
+                                    <th>During</th>
+                                    <th>After</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="client">
+                                    <td class="phase">CLIENT</td>
+                                    <td>${service.workflows.before.client}</td>
+                                    <td>${service.workflows.during.client}</td>
+                                    <td>${service.workflows.after.client}</td>
+                                </tr>
+                                <tr class="internal">
+                                    <td class="phase">INTERNAL</td>
+                                    <td>${service.workflows.before.internal}</td>
+                                    <td>${service.workflows.during.internal}</td>
+                                    <td>${service.workflows.after.internal}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4 style="font-weight: 600; color: var(--primary); margin-top: 1rem; margin-bottom: 0.75rem;">Marketing Templates (4)</h4>
+                        <ul class="templates-list">
+                            ${service.templates.map(t => `<li><span>${t}</span><span class="template-type">Template</span></li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // TOGGLE SERVICE EXPAND
+    function toggleService(idx) {
+        const card = document.querySelector(`.service-card[data-service="${idx}"]`);
+        card.classList.toggle('expanded');
+    }
+
+    // RENDER TEMPLATES
+    function renderTemplates() {
+        const container = document.getElementById('templatesContainer');
+        renderTemplateGrid(allTemplates);
+    }
+
+    function renderTemplateGrid(templates) {
+        const container = document.getElementById('templatesContainer');
+        container.innerHTML = templates.map(t => `
+            <div class="template-card">
+                <div class="template-name">${t.name}</div>
+                <div class="template-meta">
+                    <div><strong>Service:</strong> ${t.service.substring(0, 30)}...</div>
+                    <div><strong>Type:</strong> ${t.type}</div>
+                </div>
+                <button class="copy-btn" onclick="copyToClipboard('${t.name}')">Copy to Clipboard</button>
+            </div>
+        `).join('');
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Copied: ' + text);
+        });
+    }
+
+    // TEMPLATE SEARCH
+    document.addEventListener('DOMContentLoaded', function() {
+        const search = document.getElementById('templateSearch');
+        if (search) {
+            search.addEventListener('input', function(e) {
+                const filtered = allTemplates.filter(t =>
+                    t.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
+                    t.service.toLowerCase().includes(e.target.value.toLowerCase()) ||
+                    t.type.toLowerCase().includes(e.target.value.toLowerCase())
+                );
+                renderTemplateGrid(filtered);
+            });
+        }
+    });
+
+    // EVALUATION TOOL
+    function initEvaluationTool() {
+        const sliders = document.querySelectorAll('.eval-slider');
+        sliders.forEach(slider => {
+            slider.addEventListener('input', updateEvaluation);
+        });
+        updateEvaluation();
+    }
+
+    function updateEvaluation() {
+        const values = {
+            visibility: parseInt(document.getElementById('visibility').value),
+            authority: parseInt(document.getElementById('authority').value),
+            differentiation: parseInt(document.getElementById('differentiation').value),
+            consistency: parseInt(document.getElementById('consistency').value),
+            engagement: parseInt(document.getElementById('engagement').value),
+            authenticity: parseInt(document.getElementById('authenticity').value)
+        };
+
+        document.getElementById('visibilityValue').textContent = values.visibility;
+        document.getElementById('authorityValue').textContent = values.authority;
+        document.getElementById('differentiationValue').textContent = values.differentiation;
+        document.getElementById('consistencyValue').textContent = values.consistency;
+        document.getElementById('engagementValue').textContent = values.engagement;
+        document.getElementById('authenticityValue').textContent = values.authenticity;
+
+        const total = Object.values(values).reduce((a, b) => a + b, 0);
+        document.getElementById('totalScore').textContent = total;
+
+        const archetype = detectArchetype(values);
+        document.getElementById('archetypeLabel').textContent = archetype.name;
+        document.getElementById('archetypeDescription').textContent = archetype.description;
+
+        drawRadarChart(values);
+    }
+
+    function detectArchetype(values) {
+        const avg = Object.values(values).reduce((a, b) => a + b) / 6;
+
+        if (values.visibility < 4 && values.authority > 7) {
+            return {
+                name: "The Best Kept Secret",
+                description: "High authority but low visibility. Build your reach and distribution channels to match your expertise."
+            };
+        } else if (values.visibility > 7 && values.authority < 4) {
+            return {
+                name: "The Loud Nobody",
+                description: "Strong visibility but lacks credibility. Focus on building social proof, credentials, and authority."
+            };
+        } else if (values.consistency > 7 && values.authenticity < 4) {
+            return {
+                name: "The Boring Corporate",
+                description: "Consistent but inauthentic. Humanize your messaging and share your real story and struggles."
+            };
+        } else if (Object.values(values).every(v => v >= 7)) {
+            return {
+                name: "The Industry Legend",
+                description: "Exceptional across all dimensions. You're operating at elite brand level. Maintain and innovate."
+            };
+        } else if (avg >= 4 && avg <= 6) {
+            return {
+                name: "The Rising Star",
+                description: "Balanced growth trajectory. Build on your strengths and systematically address weaknesses."
+            };
+        } else {
+            return {
+                name: "The Emerging Voice",
+                description: "Early stage. Focus on consistency and building foundational brand elements across all dimensions."
+            };
+        }
+    }
+
+    function drawRadarChart(values) {
+        const canvas = document.getElementById('radarChart');
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const maxRadius = 100;
+        const numPoints = 6;
+        const angleSlice = (Math.PI * 2) / numPoints;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw grid circles
+        ctx.strokeStyle = 'rgba(0,128,128,0.2)';
+        ctx.lineWidth = 1;
+        for (let i = 1; i <= 5; i++) {
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, (maxRadius / 5) * i, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        // Draw axes
+        const labels = ['Visibility', 'Authority', 'Differentiation', 'Consistency', 'Engagement', 'Authenticity'];
+        const points = [];
+        ctx.strokeStyle = 'rgba(0,128,128,0.3)';
+        ctx.lineWidth = 1;
+
+        labels.forEach((label, i) => {
+            const angle = angleSlice * i - Math.PI / 2;
+            const x = centerX + maxRadius * Math.cos(angle);
+            const y = centerY + maxRadius * Math.sin(angle);
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            points.push({x, y, angle, value: Object.values(values)[i]});
+        });
+
+        // Draw data polygon
+        ctx.fillStyle = 'rgba(0,128,128,0.25)';
+        ctx.strokeStyle = '#008080';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+
+        points.forEach((point, i) => {
+            const radius = (point.value / 10) * maxRadius;
+            const x = centerX + radius * Math.cos(point.angle);
+            const y = centerY + radius * Math.sin(point.angle);
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        });
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Draw labels
+        ctx.fillStyle = 'var(--text)';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        labels.forEach((label, i) => {
+            const angle = angleSlice * i - Math.PI / 2;
+            const x = centerX + (maxRadius + 25) * Math.cos(angle);
+            const y = centerY + (maxRadius + 25) * Math.sin(angle) + 4;
+            ctx.fillText(label, x, y);
+        });
+    }
+
+    // NAVIGATION
+    function setupNavigation() {
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+                switchSection(section);
+            });
+        });
+    }
+
+    function switchSection(sectionId) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+        document.getElementById(sectionId).classList.add('active');
+        document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+
+        // Close mobile sidebar
+        document.getElementById('sidebar').classList.add('mobile-closed');
+    }
+
+    // DARK MODE
+    function setupDarkMode() {
+        const toggle = document.getElementById('toggleDark');
+        const isDark = localStorage.getItem('darkMode') === 'true';
+
+        if (isDark) {
+            document.body.classList.add('dark-mode');
+            toggle.textContent = '☀️';
+        }
+
+        toggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            this.textContent = isDark ? '☀️' : '🌙';
+        });
+    }
+
+    // MOBILE TOGGLE
+    function setupMobileToggle() {
+        document.getElementById('mobileSidebarToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('mobile-closed');
+        });
+    }
+</script>
+
+</body>
+</html>
