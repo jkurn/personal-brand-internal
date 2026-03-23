@@ -1104,7 +1104,7 @@
 
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-number">12</div>
+                        <div class="stat-number">20</div>
                         <div class="stat-label">Service Offerings</div>
                     </div>
                     <div class="stat-card">
@@ -1112,7 +1112,7 @@
                         <div class="stat-label">Pipeline Phases</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">48+</div>
+                        <div class="stat-number">80+</div>
                         <div class="stat-label">Templates & Scripts</div>
                     </div>
                     <div class="stat-card">
@@ -1550,7 +1550,7 @@
 </div>
 
 <script>
-    // DATA: All 12 Services
+    // DATA: All 20 Services
     const services = [
         {
             name: "Personal Brand Discovery Call",
@@ -1803,6 +1803,174 @@
                 }
             },
             templates: ["Audit Questionnaire", "Audit Briefing Email", "Comprehensive Audit Report Template", "Action Plan Template"]
+        },
+        {
+            name: "Brand Identity Architecture",
+            price: "$8,000",
+            hours: "12 weeks",
+            description: "Flagship 12-week brand identity program: deep introspection, unique differentiator, compelling story/bio, content pillars, brand voice & tone, target audience mapping, competitor research, and full plan of action.",
+            workflows: {
+                before: {
+                    client: "Complete comprehensive intake questionnaire, gather existing brand materials, schedule 3 deep-dive strategy calls",
+                    internal: "Review client's full digital presence, research competitors and industry positioning, prepare introspection framework and workshop materials"
+                },
+                during: {
+                    client: "Participate in 3 deep-dive strategy sessions, provide candid feedback on brand direction, review iterative drafts of brand identity document",
+                    internal: "Facilitate introspection exercises, develop unique differentiator and brand story, create content pillars and platform strategy, define brand voice/tone guidelines, map target audience personas"
+                },
+                after: {
+                    client: "Review final Brand Identity Blueprint, implement across all touchpoints, schedule quarterly brand health check-ins",
+                    internal: "Deliver Brand Identity Blueprint (30+ page document), provide implementation roadmap with prioritized actions, schedule 90-day follow-up review"
+                }
+            },
+            templates: ["Brand Architecture Intake Form", "Introspection Workshop Guide", "Brand Identity Blueprint Template", "Differentiator Canvas", "Content Pillar Framework", "Brand Voice & Tone Guide", "Target Audience Persona Template", "Implementation Roadmap"]
+        },
+        {
+            name: "Photoshoot Curation (Full-Service)",
+            price: "$4,000",
+            hours: "15 hrs",
+            description: "White-glove photoshoot planning and management: creative direction, location scouting, wardrobe styling consultation, photographer coordination, and day-of shoot management.",
+            workflows: {
+                before: {
+                    client: "Share brand guidelines and visual preferences, discuss wardrobe and location ideas, confirm availability for shoot day",
+                    internal: "Develop creative brief and mood board, scout and secure 2-3 locations, coordinate photographer and videographer, arrange wardrobe styling consultation"
+                },
+                during: {
+                    client: "Arrive styled and prepared, follow creative direction, provide real-time feedback on shots and poses",
+                    internal: "Manage full day-of logistics, provide on-site creative direction throughout shoot, coordinate photography/videography teams, ensure variety of shots across locations"
+                },
+                after: {
+                    client: "Review and select final images, implement across brand touchpoints (LinkedIn, website, speaker kit)",
+                    internal: "Curate and deliver 20+ retouched images in multiple formats, provide usage guide for each platform, deliver within 10 business days"
+                }
+            },
+            templates: ["Photoshoot Creative Brief", "Mood Board Template", "Location Scouting Checklist", "Wardrobe Styling Guide", "Shot List Template", "Image Delivery & Usage Guide"]
+        },
+        {
+            name: "Speaker Kit Creation",
+            price: "$4,000",
+            hours: "15 hrs",
+            description: "Complete done-for-you speaker kit: speaker bio, talk descriptions, audience takeaways, branded speaker one-pager, speaker reel production, and testimonial integration.",
+            workflows: {
+                before: {
+                    client: "Share speaking experience, past talks/recordings, and target speaking topics, provide testimonials from event organizers",
+                    internal: "Review client's expertise and speaking history, research target conferences and events, develop speaker positioning strategy"
+                },
+                during: {
+                    client: "Review and refine speaker bio and talk descriptions, provide footage for speaker reel, approve one-pager design",
+                    internal: "Write speaker bio (short/long versions), craft 3-5 talk descriptions with audience takeaways, design branded speaker one-pager, produce speaker reel (2-3 min highlight video)"
+                },
+                after: {
+                    client: "Distribute speaker kit to event organizers, update website and LinkedIn with speaker materials",
+                    internal: "Deliver complete speaker kit in digital and print-ready formats, provide outreach email templates for conference submissions, offer speaker placement strategy session"
+                }
+            },
+            templates: ["Speaker Discovery Questionnaire", "Speaker Bio Template (Short/Long)", "Talk Description Template", "Speaker One-Pager Design Brief", "Speaker Reel Shot List", "Conference Outreach Email Templates"]
+        },
+        {
+            name: "Keynote Development",
+            price: "$5,000",
+            hours: "20 hrs",
+            description: "End-to-end keynote creation: strategic talk outline, narrative arc development, custom slide deck design, workshop exercises (if applicable), and public speaking coaching.",
+            workflows: {
+                before: {
+                    client: "Share target audience/event details, provide key messages and stories to include, discuss desired audience takeaways",
+                    internal: "Research audience and event context, develop strategic talk outline and narrative arc, identify storytelling opportunities and data points"
+                },
+                during: {
+                    client: "Review and iterate on talk outline, participate in 2-3 coaching sessions, rehearse delivery with feedback",
+                    internal: "Write full keynote script with speaker notes, design custom slide deck (30-50 slides), develop workshop exercises if applicable, conduct speaking coaching sessions (pacing, delivery, audience engagement)"
+                },
+                after: {
+                    client: "Rehearse final version, deliver keynote, gather audience feedback",
+                    internal: "Deliver final keynote package (script, slides, speaker notes), provide pre-event coaching call, offer post-event debrief and refinement for future talks"
+                }
+            },
+            templates: ["Keynote Discovery Brief", "Talk Outline Framework", "Slide Deck Design Brief", "Speaker Notes Template", "Workshop Exercise Template", "Pre-Event Coaching Checklist", "Post-Event Debrief Form"]
+        },
+        {
+            name: "Visual Identity & Brand Kit",
+            price: "$3,500",
+            hours: "15 hrs",
+            description: "Complete visual identity system: logo design (primary + variations), color palette, typography selection, brand guidelines document, and templated assets for social/presentations.",
+            workflows: {
+                before: {
+                    client: "Share brand values and aesthetic preferences, provide examples of visual styles that resonate, discuss where brand will be applied",
+                    internal: "Conduct visual discovery session, research industry visual trends, create mood boards with 2-3 design directions"
+                },
+                during: {
+                    client: "Review mood boards and select direction, provide feedback on logo concepts and color palettes, approve final visual system",
+                    internal: "Design logo (primary + 3 variations), develop color palette (primary, secondary, accent), select typography system (headings, body, accent), create brand guidelines document"
+                },
+                after: {
+                    client: "Implement visual identity across all touchpoints, share brand guidelines with any designers/vendors",
+                    internal: "Deliver complete brand kit (logo files in all formats, color codes, font files), provide templated assets (social media templates, presentation template, email signature), deliver brand guidelines PDF"
+                }
+            },
+            templates: ["Visual Discovery Questionnaire", "Mood Board Template", "Logo Concept Presentation", "Brand Guidelines Document Template", "Social Media Template Kit", "Presentation Template", "Email Signature Template"]
+        },
+        {
+            name: "Podcast Guest Placement",
+            price: "$2,500",
+            hours: "10 hrs",
+            description: "Strategic podcast guest placement: target show research, pitch creation, booking management, talking points preparation, and post-appearance amplification strategy.",
+            workflows: {
+                before: {
+                    client: "Share expertise areas and target audience, provide list of dream podcasts or topics, record a short intro clip for pitches",
+                    internal: "Research and curate list of 20-30 target podcasts (audience fit, reach, booking process), develop client's podcast pitch and media kit, create 3-5 talking point frameworks"
+                },
+                during: {
+                    client: "Review and approve target podcast list, participate in pre-appearance coaching, record podcast appearances",
+                    internal: "Send personalized pitches to target shows, manage booking logistics and follow-ups, provide pre-appearance coaching (storytelling, sound bites, CTAs)"
+                },
+                after: {
+                    client: "Share episodes across social channels, repurpose clips for content, track inbound leads from appearances",
+                    internal: "Deliver post-appearance amplification plan, create social media clips and quote graphics from each episode, provide monthly placement report with metrics"
+                }
+            },
+            templates: ["Podcast Pitch Template", "Target Show Research Sheet", "Talking Points Framework", "Pre-Appearance Coaching Checklist", "Amplification Plan Template", "Monthly Placement Report"]
+        },
+        {
+            name: "Personal Website Build",
+            price: "$5,000",
+            hours: "20 hrs",
+            description: "Done-for-you 2-page personal website: full content creation, visual layout and design, technical implementation, SEO optimization, and launch support.",
+            workflows: {
+                before: {
+                    client: "Share brand identity materials, provide headshots/photography, outline key messages and desired CTAs",
+                    internal: "Review brand guidelines and existing materials, create sitemap and wireframes, develop content strategy for each page section"
+                },
+                during: {
+                    client: "Review wireframes and content drafts, provide feedback on design comps, approve final version before launch",
+                    internal: "Write all website copy (hero, about, services, testimonials, CTA), design responsive layout aligned to brand identity, implement with SEO best practices (meta tags, schema, page speed)"
+                },
+                after: {
+                    client: "Review live site, share URL across platforms, update content as needed",
+                    internal: "Launch site and verify cross-device compatibility, deliver CMS training (if applicable), provide 30-day post-launch support for edits and fixes"
+                }
+            },
+            templates: ["Website Discovery Brief", "Sitemap & Wireframe Template", "Website Copy Framework", "Design Comp Presentation", "SEO Checklist", "Launch Checklist", "CMS Training Guide"]
+        },
+        {
+            name: "Online Course Creation",
+            price: "$3,000",
+            hours: "15 hrs",
+            description: "Design and build a self-paced online course or mini-course: curriculum development, video script writing, slide design, platform setup, and launch strategy.",
+            workflows: {
+                before: {
+                    client: "Identify core expertise to teach, define target student outcome, share any existing content or frameworks",
+                    internal: "Conduct curriculum discovery session, research competing courses in the space, outline module structure and learning objectives"
+                },
+                during: {
+                    client: "Review and approve curriculum outline, record video lessons, provide feedback on materials",
+                    internal: "Write scripts for 8-12 video modules, design slide decks and supplementary materials (worksheets, checklists), set up course on chosen platform (Teachable, Kajabi, etc.)"
+                },
+                after: {
+                    client: "Review final course, approve and launch, promote to audience",
+                    internal: "Deliver launch strategy with email sequences and social promotion plan, set up sales page copy, provide 30-day post-launch optimization support"
+                }
+            },
+            templates: ["Course Curriculum Outline", "Module Script Template", "Course Slide Deck Template", "Student Worksheet Template", "Platform Setup Checklist", "Launch Email Sequence", "Sales Page Copy Template"]
         }
     ];
 
